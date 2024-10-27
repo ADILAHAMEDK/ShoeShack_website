@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { bannerSeeAll } from '../assets/assets'
-import { FaSlidersH, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaSlidersH, FaChevronDown, FaChevronUp, FaHeart } from "react-icons/fa";
 import { FaXmark } from 'react-icons/fa6';
 import { MdDisabledByDefault } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
-import { priceFilterSeeAll } from '../redux/ProductsSlice';
+import { fetchProducts, priceFilterSeeAll } from '../redux/ProductsSlice';
 
 const SeeAll = () => {
     const [dropDownPrice,setDropDownPrice] = useState(false);
@@ -13,13 +13,26 @@ const SeeAll = () => {
     const [GenderCheckBox1, setGenderCheckBox1] = useState(true);
     const [GenderCheckBox2, setGenderCheckBox2] = useState(true);
     const [GenderCheckBox3, setGenderCheckBox3] = useState(true);
-    const {priceFilterData} = useSelector((state)=> state.product)
+    const {priceFilterData} = useSelector((state)=> state.product);
+    const [seeAllData, setSeeAllData] = useState(priceFilterData)
     console.log(priceFilterData, "priceFilter........")
     const dispatch = useDispatch();
+
+    useEffect(()=>{
+        dispatch(fetchProducts())
+    },[dispatch])
+
+    useEffect(()=>{
+        setSeeAllData(priceFilterData)
+    },[priceFilterData])
 
     const handleDropDown = (dropdown)=>{
         if(dropdown === "dropDownPrice"){
             setDropDownPrice(!dropDownPrice)
+            if(!dropDownPrice){
+                setRadioPrice("")
+                dispatch(priceFilterSeeAll(""))
+            }
             setDropDownGender(false)
         }else if(dropdown === "dropDownGender"){
             setDropDownGender(!dropDownGender)
@@ -50,9 +63,9 @@ const SeeAll = () => {
     }
 
     const handleRadioPrice = (e)=>{
-        const selected = e.target.value
-        setRadioPrice(selected)
-        dispatch(priceFilterSeeAll(selected));
+        const selectedPrice = e.target.value
+        setRadioPrice(selectedPrice)
+        dispatch(priceFilterSeeAll(selectedPrice));
     }
   return (
     <div className='px-3 mt-2'>
@@ -100,7 +113,7 @@ const SeeAll = () => {
             </div>  
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-3'>
-                {priceFilterData && priceFilterData.length > 0 ? priceFilterData.map((item, index)=>(
+                {seeAllData && seeAllData.length > 0 ? seeAllData.map((item, index)=>(
                     <div key={index} className='relative hover:border border-black group'>
                         <img src={item.imageUrl} alt="img" className='w-full h-72 transition duration-500 ease-in-out cursor-pointer' />
                         <h1 className='absolute bottom-12 group-hover:bottom-14  ml-1 px-2 bg-white'>${item.price}</h1>

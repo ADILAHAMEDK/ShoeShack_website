@@ -28,11 +28,11 @@ const productsSlice = createSlice({
     reducers: {
         priceFilterSeeAll:(state, action)=> {
             if(action.payload){
-                console.log( action.payload,"pppppppppppppp")
-                state.priceFilterData = state.filterProductsHome.filter((item) => {
-                    console.log(state.priceFilterData, "stateprice.........")
-                    return Number(item.price) === Number(action.payload);
-                });
+                state.priceFilterData = state.filterProductsHome.filter((item)=>{
+                    return Number(item.price) === Number(action.payload)
+                }) 
+            }else{
+                state.priceFilterData = state.filterProductsHome
             }
             
             console.log(state.priceFilterData ,".....hhh")
@@ -55,12 +55,12 @@ const productsSlice = createSlice({
             console.log("start");
             state.loading = true;
         }),
-        builders.addCase(fetchProducts.fulfilled, (state, action) => {
-            const actionData = action.payload
-            console.log(actionData, "actiommmmm");
-            state.filterProductsHome = actionData; 
-            state.priceFilterData = state.filterProductsHome;   
-            console.log(state.filterProductsHome, "jjjjjjjjj")   
+        builders.addCase(fetchProducts.fulfilled, (state, action) => {            
+            state.filterProductsHome = action.payload; 
+            console.log(state.filterProductsHome, "jjjjjjjjj")  
+            state.priceFilterData = action.payload;
+            console.log(state.priceFilterData,"ppppppppppp")   
+             
             state.loading = false;  
         }),
         builders.addCase(fetchProducts.rejected, (state, action) => {
