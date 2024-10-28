@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addFavorite, fetchProducts } from '../redux/ProductsSlice';
+import { fetchProducts } from '../redux/ProductsSlice';
 import { FaHeart } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import { addFavorite } from '../redux/UserSlice';
 
 const FilterHomeProducts = () => {
     const [homeFilter, setHomeFilter] = useState([]);

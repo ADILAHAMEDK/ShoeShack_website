@@ -55,7 +55,7 @@ const Header = () => {
     return (
         <div className='bg-black text-white'>
             <div className='py-3 px-3 max-w-[1490px] mx-auto flex items-center justify-between gap-1 lg:gap-3'>
-                <Link to="/"><a className='text-lg font-semibold'>Shoe Website</a></Link>
+                <Link to="/"><a className='text-lg font-semibold'>ShoeShack</a></Link>
                 <div className='hidden sm:flex gap-9 text-base'>
                     <Link to="/" className='hover:underline'><a>Home</a></Link>
                     <a>All Categories</a>

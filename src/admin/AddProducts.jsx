@@ -10,6 +10,7 @@ const AddProducts = () => {
         price:"",
         image:"",
         category:"",
+        gender:"",
     });
 
     const handleInputChange = (e)=>{
@@ -37,6 +38,7 @@ const AddProducts = () => {
                     name: addProductsInput.name,
                     price: addProductsInput.price,
                     category:addProductsInput.category,
+                    gender:addProductsInput.gender,
                     imageUrl: imageUrl,
                   });
 
@@ -62,6 +64,10 @@ const AddProducts = () => {
         <div className='px-2 flex mb-3'>
             <label className='text-lg mr-1'>Category:</label>
             <input type="text" name='category' value={addProductsInput.category} onChange={handleInputChange} className='w-full px-2 border border-black focus:outline-none rounded' />
+        </div>
+        <div className='px-2 flex mb-3'>
+            <label className='text-lg mr-1'>Gender:</label>
+            <input type="text" name='gender' value={addProductsInput.gender} onChange={handleInputChange} className='w-full px-2 border border-black focus:outline-none rounded' />
         </div>
         <div className='px-2 flex mb-3'>
             <label className='text-lg mr-1'>Image:</label>

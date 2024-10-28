@@ -23,7 +23,6 @@ const productsSlice = createSlice({
         filterProductsHome:[],
         loading: false,
         priceFilterData:[],
-        favorite:[],
     },
     reducers: {
         priceFilterSeeAll:(state, action)=> {
@@ -37,18 +36,15 @@ const productsSlice = createSlice({
             
             console.log(state.priceFilterData ,".....hhh")
         },
-        addFavorite:(state, action)=>{
-            const actionFaverite = action.payload
-            const exist = state.filterProductsHome.find((item)=> item.name === actionFaverite.name)
-            console.log( exist,"fff")
-            if(!exist){ 
-                const addFaverite = state.filterProductsHome.find((item.name === actionFaverite.name))
-                state.favorite.push(addFaverite)
-                console.log(state.favorite, "faveriiiiii")   
+        genderFilterSeeAll:(state, action)=>{
+            if(action.payload){
+                state.priceFilterData = state.filterProductsHome.filter((item) => {
+                    return item.gender === action.payload
+                });
             }else{
-                state.favorite.push(exist)
-            } 
-        }
+                state.priceFilterData = state.filterProductsHome
+            }   
+        },
     },
     extraReducers: (builders) => {
         builders.addCase(fetchProducts.pending, (state, action) => {
@@ -71,4 +67,4 @@ const productsSlice = createSlice({
 });
 
 export default productsSlice.reducer;
-export const { priceFilterSeeAll, addFavorite } = productsSlice.actions;
+export const { priceFilterSeeAll, genderFilterSeeAll} = productsSlice.actions;

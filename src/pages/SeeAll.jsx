@@ -4,7 +4,7 @@ import { FaSlidersH, FaChevronDown, FaChevronUp, FaHeart } from "react-icons/fa"
 import { FaXmark } from 'react-icons/fa6';
 import { MdDisabledByDefault } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProducts, priceFilterSeeAll } from '../redux/ProductsSlice';
+import { fetchProducts, priceFilterSeeAll, genderFilterSeeAll } from '../redux/ProductsSlice';
 
 const SeeAll = () => {
     const [dropDownPrice,setDropDownPrice] = useState(false);
@@ -13,6 +13,7 @@ const SeeAll = () => {
     const [GenderCheckBox1, setGenderCheckBox1] = useState(true);
     const [GenderCheckBox2, setGenderCheckBox2] = useState(true);
     const [GenderCheckBox3, setGenderCheckBox3] = useState(true);
+    // const [checkBoxAll, setCheckBoxAll] = useState([]);
     const {priceFilterData} = useSelector((state)=> state.product);
     const [seeAllData, setSeeAllData] = useState(priceFilterData)
     console.log(priceFilterData, "priceFilter........")
@@ -49,16 +50,31 @@ const SeeAll = () => {
         }   
     }
 
-    const handleCheckBox = (checkBox)=>{
+    const handleCheckBox = (checkBox, gender)=>{
         if(checkBox === "GenderCheckBox1"){
             setGenderCheckBox1(!GenderCheckBox1)
             console.log(GenderCheckBox1, "1")
+            if(GenderCheckBox1 === true){
+                dispatch(genderFilterSeeAll(gender))
+            }else{
+                dispatch(genderFilterSeeAll(""))
+            }
         }else if(checkBox === "GenderCheckBox2"){
             setGenderCheckBox2(!GenderCheckBox2)
             console.log(GenderCheckBox2, "2")
+            if(GenderCheckBox2 === true){
+                dispatch(genderFilterSeeAll(gender))
+            }else{
+                dispatch(genderFilterSeeAll(""))
+            }
         }else if(checkBox === "GenderCheckBox3"){
             setGenderCheckBox3(!GenderCheckBox3)
             console.log(GenderCheckBox3, "3")
+            if(GenderCheckBox3 === true){
+                dispatch(genderFilterSeeAll(gender))
+            }else{
+                dispatch(genderFilterSeeAll(""))
+            }
         }
     }
 
@@ -98,15 +114,15 @@ const SeeAll = () => {
                     <FaXmark onClick={()=>setDropDownGender(false)} className='absolute top-2 right-2'/>
                     <span onClick={()=>handleClear("gender")} className='pl-2 pt-1 flex items-center gap-2 font-medium'>clear <MdDisabledByDefault className='pt-1 text-xl ' /></span>
                     <div className='pl-2 flex items-center gap-3'>
-                        <input type="checkbox" name='checked1' value={GenderCheckBox1} onChange={()=>handleCheckBox("GenderCheckBox1")} className='h-4 w-4 ' />
+                        <input type="checkbox" name='checked1' value={GenderCheckBox1} onChange={()=>handleCheckBox("GenderCheckBox1","male")} className='h-4 w-4 ' />
                         <h2 className='text-lg'>Male</h2>
                     </div>
                     <div className='pl-2 flex items-center gap-3'>
-                        <input type="checkbox" name='checked2' value={GenderCheckBox2} onChange={()=>handleCheckBox("GenderCheckBox2")} className='h-4 w-4 ' />
+                        <input type="checkbox" name='checked2' value={GenderCheckBox2} onChange={()=>handleCheckBox("GenderCheckBox2","female")} className='h-4 w-4 ' />
                         <h2 className='text-lg'>Female</h2>
                     </div> 
                     <div className='pl-2 flex items-center gap-3'>
-                        <input type="checkbox" name='checked3' value={GenderCheckBox3} onChange={()=>handleCheckBox("GenderCheckBox3")} className='h-4 w-4 ' />
+                        <input type="checkbox" name='checked3' value={GenderCheckBox3} onChange={()=>handleCheckBox("GenderCheckBox3","kids")} className='h-4 w-4 ' />
                         <h2 className='text-lg'>Kids</h2>
                     </div>    
                 </div>}
