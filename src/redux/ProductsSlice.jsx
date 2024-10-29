@@ -17,14 +17,36 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async ()
     }
 });
 
+export const fecthSearchedName = createAsyncThunk("products/fetchSearchedName", async()=>{
+    try {
+        const dataSearchedName = collection(db,"searchedName");
+        const data = await getDocs(dataSearchedName);
+        const getData = data.docs.map((item)=>({...item.data(), id: item.id}));
+        return getData
+        
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 const productsSlice = createSlice({
     name: "products",
     initialState: {
+        search:[],
+        searchedName:"",
         filterProductsHome:[],
         loading: false,
         priceFilterData:[],
     },
     reducers: {
+        searchFunction:(state, action)=>{
+            console.log(action.payload,"search payload")
+            state.searchedName = action.payload
+            state.search = state.filterProductsHome.filter((item)=>{
+                return item.name.toLowerCase().includes(action.payload.toLowerCase())
+             })
+             console.log(state.search,"search result")
+        },
         priceFilterSeeAll:(state, action)=> {
             if(action.payload){
                 state.priceFilterData = state.filterProductsHome.filter((item)=>{
@@ -63,8 +85,23 @@ const productsSlice = createSlice({
             console.log("Failed to fetch products", action.error);
             state.loading = false;
         });
+        
+        //searchName thunk 
+        builders.addCase(fecthSearchedName.pending, (state) => {
+            console.log("start");
+            state.loading = true;
+        }),
+        builders.addCase(fecthSearchedName.fulfilled, (state, action) => {   
+          console.log(action.payload, "fire")         
+          state.searchedName = action.payload
+            state.loading = false;  
+        }),
+        builders.addCase(fecthSearchedName.rejected, (state, action) => {
+            console.log("Failed to searchName", action.error);
+            state.loading = false;
+        });
     }
 });
 
 export default productsSlice.reducer;
-export const { priceFilterSeeAll, genderFilterSeeAll} = productsSlice.actions;
+export const {searchFunction, priceFilterSeeAll, genderFilterSeeAll} = productsSlice.actions;

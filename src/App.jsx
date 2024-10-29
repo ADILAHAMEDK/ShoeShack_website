@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import AddProducts from './admin/AddProducts'
 import SeeAll from './pages/SeeAll'
 import AdminHomePage from './admin/AdminHomePage'
+import Search from './pages/Search'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Route path="/addProducts" element={<AddProducts />} />
       <Route path='/seeAll' element={<SeeAll />} />
       <Route path='/adminHomePage' element={<AdminHomePage />} />
+      <Route path='/search' element={<Search />} />
     
       {/* 
       <Route path="/seeall" element={<SeeAll />} /> */}

@@ -5,14 +5,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/Config';
 import { signOut } from 'firebase/auth';
 import { toast } from 'react-toastify';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc } from 'firebase/firestore';
 import { db } from '../firebase/Config';
+import { useDispatch } from 'react-redux';
+import { fetchProducts, searchFunction } from '../redux/ProductsSlice';
 
 const Header = () => {
     const navigate = useNavigate();
     const [dropDown, setDropDown] = useState(false);
     const [menu, setMenu] = useState(false);
     const [userData, setUserData] = useState(null);
+    const [search, setSearch] = useState("")
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -34,9 +38,14 @@ const Header = () => {
         return () => unsubscribe();
     }, []);
 
+    useEffect(()=>{
+        dispatch(fetchProducts())
+    },[dispatch])
+
     const handleLogOut = async () => {
         try {
             await signOut(auth);
+            navigate("/login")
             toast.success("Logged out successfully.");
         } catch (error) {
             toast.error("Failed to log out. Try again.");
@@ -52,12 +61,34 @@ const Header = () => {
         // Your navigation logic here...
     };
 
+    const handleSearch = async()=>{
+        try {
+            //delete Previous Stored SearchedName
+            const deletePreviousSearchedName = collection(db,"searchedName")
+            const existingSearches = await getDocs(query(deletePreviousSearchedName));
+            existingSearches.forEach(async(docSnapshot)=>{
+               await deleteDoc(doc(db,"searchedName", docSnapshot.id))
+            });
+             
+            //add firebase database searchedName
+            const searchId = new Date().toISOString(); 
+            await setDoc(doc(db, "searchedName",searchId), {
+                id:searchId,
+                searchedName:search,
+               });            
+        } catch (error) {
+            toast.error(error)
+        }
+        dispatch(searchFunction(search));
+        navigate("/search")
+    }
+
     return (
         <div className='bg-black text-white'>
             <div className='py-3 px-3 max-w-[1490px] mx-auto flex items-center justify-between gap-1 lg:gap-3'>
-                <Link to="/"><a className='text-lg font-semibold'>ShoeShack</a></Link>
+                <Link to="/"className='text-lg font-semibold'>ShoeShack</Link>
                 <div className='hidden sm:flex gap-9 text-base'>
-                    <Link to="/" className='hover:underline'><a>Home</a></Link>
+                    <Link to="/" className='hover:underline'>Home</Link>
                     <a>All Categories</a>
                     <a>Mens</a>
                     <a>Womens</a>
@@ -65,8 +96,8 @@ const Header = () => {
                     <a>Brands</a>
                 </div>
                 <div className='w-48 lg:w-80 rounded text-black relative'>
-                    <input type="text" placeholder='Search...' className='w-full px-2 py-[2px] rounded outline-none' />
-                    <FaSearch className='absolute top-2 right-2' />
+                    <input type="text" value={search} onChange={(e)=>setSearch(e.target.value)}  placeholder='Search...' className='w-full px-2 py-[2px] rounded outline-none' />
+                    <FaSearch onClick={handleSearch} className='absolute top-2 right-2' />
                 </div>
                 <div className='flex items-center gap-3 text-lg'>
                     <div>
