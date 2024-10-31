@@ -10,6 +10,7 @@ import AddProducts from './admin/AddProducts'
 import SeeAll from './pages/SeeAll'
 import AdminHomePage from './admin/AdminHomePage'
 import Search from './pages/Search'
+import Favorites from './pages/Favorites'
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
       <Route path='/seeAll' element={<SeeAll />} />
       <Route path='/adminHomePage' element={<AdminHomePage />} />
       <Route path='/search' element={<Search />} />
+      <Route path='/faverite' element={<Favorites />} />
     
       {/* 
       <Route path="/seeall" element={<SeeAll />} /> */}

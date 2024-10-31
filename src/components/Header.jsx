@@ -62,25 +62,30 @@ const Header = () => {
     };
 
     const handleSearch = async()=>{
-        try {
-            //delete Previous Stored SearchedName
-            const deletePreviousSearchedName = collection(db,"searchedName")
-            const existingSearches = await getDocs(query(deletePreviousSearchedName));
-            existingSearches.forEach(async(docSnapshot)=>{
-               await deleteDoc(doc(db,"searchedName", docSnapshot.id))
-            });
-             
-            //add firebase database searchedName
-            const searchId = new Date().toISOString(); 
-            await setDoc(doc(db, "searchedName",searchId), {
-                id:searchId,
-                searchedName:search,
-               });            
-        } catch (error) {
-            toast.error(error)
+        if(search === ""){
+            toast.error("Enter Something")
+        }else{
+            try {
+                //delete Previous Stored SearchedName
+                const deletePreviousSearchedName = collection(db,"searchedName")
+                const existingSearches = await getDocs(query(deletePreviousSearchedName));
+                existingSearches.forEach(async(docSnapshot)=>{
+                   await deleteDoc(doc(db,"searchedName", docSnapshot.id))
+                });
+                 
+                //add firebase database searchedName
+                const searchId = new Date().toISOString(); 
+                await setDoc(doc(db, "searchedName",searchId), {
+                    id:searchId,
+                    searchedName:search,
+                   });            
+            } catch (error) {
+                toast.error(error)
+            }
+            dispatch(searchFunction(search));
+            navigate("/search")
         }
-        dispatch(searchFunction(search));
-        navigate("/search")
+      
     }
 
     return (
@@ -101,7 +106,7 @@ const Header = () => {
                 </div>
                 <div className='flex items-center gap-3 text-lg'>
                     <div>
-                        <FaHeart />
+                        <Link to="/faverite"><FaHeart /></Link>
                     </div>
                     <div className='relative'>
                         <FaShoppingCart />

@@ -22,7 +22,7 @@ export const fecthSearchedName = createAsyncThunk("products/fetchSearchedName", 
         const dataSearchedName = collection(db,"searchedName");
         const data = await getDocs(dataSearchedName);
         const getData = data.docs.map((item)=>({...item.data(), id: item.id}));
-        return getData
+        return getData[0]?.searchedName
         
     } catch (error) {
         console.log(error)
@@ -94,7 +94,7 @@ const productsSlice = createSlice({
         builders.addCase(fecthSearchedName.fulfilled, (state, action) => {   
           console.log(action.payload, "fire")         
           state.searchedName = action.payload
-            state.loading = false;  
+          state.loading = false;  
         }),
         builders.addCase(fecthSearchedName.rejected, (state, action) => {
             console.log("Failed to searchName", action.error);
