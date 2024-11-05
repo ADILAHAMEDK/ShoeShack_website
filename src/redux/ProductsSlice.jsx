@@ -22,8 +22,8 @@ export const fecthSearchedName = createAsyncThunk("products/fetchSearchedName", 
         const dataSearchedName = collection(db,"searchedName");
         const data = await getDocs(dataSearchedName);
         const getData = data.docs.map((item)=>({...item.data(), id: item.id}));
+        console.log(getData[0].searchedName,"kkkkk")
         return getData[0]?.searchedName
-        
     } catch (error) {
         console.log(error)
     }
@@ -69,7 +69,7 @@ const productsSlice = createSlice({
         },
     },
     extraReducers: (builders) => {
-        builders.addCase(fetchProducts.pending, (state, action) => {
+        builders.addCase(fetchProducts.pending, (state) => {
             console.log("start");
             state.loading = true;
         }),
@@ -92,8 +92,14 @@ const productsSlice = createSlice({
             state.loading = true;
         }),
         builders.addCase(fecthSearchedName.fulfilled, (state, action) => {   
-          console.log(action.payload, "fire")         
-          state.searchedName = action.payload
+          console.log(action.payload, "fire")
+          if(state.searchedName === ""){
+            state.searchedName = ""
+          }else{
+            state.searchedName = action.payload
+          }         
+          
+          console.log(state.searchedName,"lllllllllll")
           state.loading = false;  
         }),
         builders.addCase(fecthSearchedName.rejected, (state, action) => {

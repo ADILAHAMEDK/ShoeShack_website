@@ -7,8 +7,8 @@ import { signOut } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc } from 'firebase/firestore';
 import { db } from '../firebase/Config';
-import { useDispatch } from 'react-redux';
-import { fetchProducts, searchFunction } from '../redux/ProductsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { fecthSearchedName, fetchProducts, searchFunction } from '../redux/ProductsSlice';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -17,6 +17,7 @@ const Header = () => {
     const [userData, setUserData] = useState(null);
     const [search, setSearch] = useState("")
     const dispatch = useDispatch();
+    const {favorite} = useSelector((state)=>state.user)
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -85,7 +86,6 @@ const Header = () => {
             dispatch(searchFunction(search));
             navigate("/search")
         }
-      
     }
 
     return (
@@ -106,7 +106,7 @@ const Header = () => {
                 </div>
                 <div className='flex items-center gap-3 text-lg'>
                     <div>
-                        <Link to="/faverite"><FaHeart /></Link>
+                        <Link to="/faverite"><FaHeart className={`${favorite.length > 0 ? "text-red-500" : "text-white"}`} /></Link>
                     </div>
                     <div className='relative'>
                         <FaShoppingCart />

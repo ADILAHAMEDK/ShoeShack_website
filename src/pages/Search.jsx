@@ -15,7 +15,7 @@ const Search = () => {
   return (
     <div className='py-2 px-3'>
         <div className='max-w-[1490px]'>
-            <h4 className='text-xl'>Your Search results for:<span className='text-3xl font-bold text-red-400'>{searchedName}</span> <span className='text-sm'>{`[${search.length}]`}</span></h4>
+            <h4 className='text-xl'>Your Search results for:<span className='text-3xl font-bold text-black-400'>{`"${searchedName}"`}</span><span className='text-base font-medium text-zinc-600'>{`[${search.length}]`}</span></h4>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-3'>
                 {search.length > 0 ? search && search.map((item, index)=>(
                     <div key={index} className='relative hover:border border-black group'>

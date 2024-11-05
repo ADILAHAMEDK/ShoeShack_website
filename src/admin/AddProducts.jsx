@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { getDownloadURL, ref, uploadBytes} from 'firebase/storage';
 import { db, storage } from '../firebase/Config';
-import { addDoc, collection } from 'firebase/firestore';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 
 const AddProducts = () => {
@@ -11,6 +11,7 @@ const AddProducts = () => {
         image:"",
         category:"",
         gender:"",
+        id:'',
     });
 
     const handleInputChange = (e)=>{
@@ -33,15 +34,18 @@ const AddProducts = () => {
             
 
                 const imageUrl = await getDownloadURL(storageRef);
-
-                await addDoc(collection(db, 'products'), {
-                    name: addProductsInput.name,
-                    price: addProductsInput.price,
-                    category:addProductsInput.category,
-                    gender:addProductsInput.gender,
-                    imageUrl: imageUrl,
-                  });
-
+    // Generate a new document reference with an auto-generated ID
+    const productRef = doc(collection(db, 'products'));
+    
+    // Use setDoc to set the document with the custom ID field
+    await setDoc(productRef, {
+        name: addProductsInput.name,
+        price: addProductsInput.price,
+        category: addProductsInput.category,
+        gender: addProductsInput.gender,
+        imageUrl: imageUrl,
+        id: productRef.id  // Store the document ID in the 'id' field
+    });
                   toast.success("Product added successfully!")
             }
             
