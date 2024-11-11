@@ -4,7 +4,7 @@ import { fetchProducts } from '../redux/ProductsSlice';
 import { FaHeart } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { deleteDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase/Config';
 import { addFavorite, fetchFavorites, removeFavorite } from '../redux/UserSlice';
 
@@ -13,18 +13,29 @@ const FilterHomeProducts = () => {
     const [homeFilterBg, setHomeFilterBg] = useState("all");
     const {filterProductsHome,loading} = useSelector((state)=> state.product)
     const {favorite} = useSelector((state)=>state.user)
+    console.log(favorite,"nnnnnnnnnnnnnnnn")
     const dispatch = useDispatch();
     const navigate = useNavigate();
     
-    useEffect(()=>{
-        dispatch(fetchProducts())
-        dispatch(fetchFavorites()); 
-    },[dispatch])
+    useEffect(() => {
+        const user = auth.currentUser;
+        if (user) {
+            dispatch(fetchFavorites(user.uid));
+        } else {
+            // If user is not immediately available, wait until it's set up
+            const unsubscribe = auth.onAuthStateChanged((user) => {
+                if (user) {
+                    dispatch(fetchFavorites(user.uid));
+                }
+            });
+            return () => unsubscribe(); // Clean up on unmount
+        }
+    }, [dispatch]);
 
     useEffect(()=>{
         setHomeFilter(filterProductsHome)
         console.log(filterProductsHome)
-    },[filterProductsHome])
+    },[filterProductsHome, favorite])
 
     const handleFilterHomeProducts = (brand)=>{
 
@@ -54,11 +65,13 @@ const FilterHomeProducts = () => {
 
         try {
 
-         // Reference to the user document
+    // Refere nce to the user document
     const userDocRef = doc(db, "users", userId);
+    console.log(userDocRef, "nnnoww")
 
     // Fetch the current user's favorites
     const userDocSnapshot = await getDoc(userDocRef);
+    console.log(userDocSnapshot,"nnnnnnn")
     const userData = userDocSnapshot.exists() ? userDocSnapshot.data() : { favorites: [] };
 
     // Check if the item is already in favorites
@@ -72,7 +85,7 @@ const FilterHomeProducts = () => {
         toast.info("Removed from Favorites");
     } else {
         // Item is not a favorite; add it
-        const updatedFavorites = [...favorites, itemData.id];
+        const updatedFavorites = [ ...favorites, itemData];
         await updateDoc(userDocRef, { favorites: updatedFavorites }); // Update the user document
         dispatch(addFavorite(itemData));
         toast.success("Added to Favorites");
@@ -101,8 +114,8 @@ const FilterHomeProducts = () => {
                         <img src={item.imageUrl} alt="img" className='w-full h-72 transition duration-500 ease-in-out cursor-pointer' />
                         <h1 className='absolute bottom-12 group-hover:bottom-14  ml-1 px-2 bg-white'>${item.price}</h1>
                         <h2 className='mt-2 text-black text-base font-medium pl-2'>{item.name}</h2>
-                        <h2 className='mt-[1px] text-gray-600 pl-2'>Originals</h2>
-                        {<FaHeart onClick={()=>handleFavorite(item)} className={`absolute top-3 right-2 text-lg ${favorite.some((items)=>items.id === item.id)  ? "text-red-700" : "text-black"}`} /> }
+                        <h2 className='mt-[1px] text-gray-600 pl-2'>{item.category}</h2>
+                        {<FaHeart onClick={()=>handleFavorite(item)} className={`absolute top-3 right-2 text-lg ${favorite.some((fav)=> fav.id === item.id )  ? "text-red-700" : "text-black"}`} /> }
                     </div>
                 ))}
             </div>

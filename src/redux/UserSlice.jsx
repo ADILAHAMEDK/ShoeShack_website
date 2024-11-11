@@ -1,32 +1,59 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { auth, db } from "../firebase/Config";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { toast } from "react-toastify";
+
+ 
+// export const fetchFavorites = createAsyncThunk("user/fetchFavorites", async (userid, {rejectWithValue}) => {
+//     // const user = auth.currentUser;
+//     // console.log(user , "uerrrrrr")
+//     // if (!user) throw new Error("User not logged in");
+
+//     if (!userid){
+//       toast.error("user not logged in");
+//       return rejectWithValue("User not logged in");
+//     }
+//     // const userId = user.uid;
+//     // console.log(userId, "uid,,,,,")
 
 
-// export const fetchFavorites = createAsyncThunk("user/fetchFavorites", async () => {
-//     const user = auth.currentUser;
-//     if (!user) throw new Error("User not logged in");
+//     const userDocRef = doc(db, "users", userid);
+//     const userDocSnapshot = await getDoc(userDocRef);
+//     console.log(userDocSnapshot,"docccccccc")
 
-//     const userId = user.uid;
-//     const favCollection = collection(db, "users", userId, "favorites");
-//     const favSnapshot = await getDocs(favCollection);
+//     if (!userDocSnapshot.exists()){
+//     console.log("User document does not exist")
+//         toast.error("")
+//     console.log("User document does not exist")
+//     }
 
-//     const favorites = favSnapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
-//     return favorites;    
+//     const userData = userDocSnapshot.data();
+//     console.log(userData,"11111kkkk")
+//     return userData.favorites || []; // Return favorites or an empty array if none exist
 // });
 
-export const fetchFavorites = createAsyncThunk("user/fetchFavorites", async () => {
-    const user = auth.currentUser;
-    if (!user) throw new Error("User not logged in");
 
-    const userId = user.uid;
-    const userDocRef = doc(db, "users", userId);
-    const userDocSnapshot = await getDoc(userDocRef);
+export const fetchFavorites = createAsyncThunk("user/fetchFavorites", async (userid, { rejectWithValue }) => {
+    if (!userid) {
+        toast.error("User not logged in");
+        return rejectWithValue("User not logged in");
+    }
 
-    if (!userDocSnapshot.exists()) throw new Error("User document does not exist");
+    try {
+        const userDocRef = doc(db, "users", userid);
+        const userDocSnapshot = await getDoc(userDocRef);
 
-    const userData = userDocSnapshot.data();
-    return userData.favorites || []; // Return favorites or an empty array if none exist
+        if (!userDocSnapshot.exists()) {
+            toast.error("User document does not exist");
+            return rejectWithValue("User document does not exist");
+        }
+
+        const userData = userDocSnapshot.data();
+        return userData.favorites || []; // Return favorites or an empty array if none exist
+    } catch (error) {
+        toast.error("Failed to fetch favorites");
+        return rejectWithValue(error.message);
+    }
 });
 
 const userSlice = createSlice({
@@ -43,8 +70,11 @@ const userSlice = createSlice({
             state.userName = null
         },
         addFavorite: (state, action) => {
-            console.log(action.payload, "nowww")
-            state.favorite.push(action.payload);
+            console.log(action.payload, "adil")
+            if(!state.favorite.some((item)=> item.id === action.payload.id)){
+                state.favorite.push(action.payload)
+            }
+            
         },
         removeFavorite: (state, action) => {
             state.favorite = state.favorite.filter(item => item.id !== action.payload.id);
@@ -57,12 +87,10 @@ const userSlice = createSlice({
         }),
         builders.addCase(fetchFavorites.fulfilled, (state, action) => {
             console.log(action.payload,"fcccccc")  
-            state.foverite = action.payload          
-         
-             
+            state.favorite = action.payload          
             state.loading = false;  
         }),
-        builders.addCase(fetchFavorites.rejected, (state, action) => {
+        builders.addCase(fetchFavorites.rejected, (state) => {
             state.loading = false;
         });
 

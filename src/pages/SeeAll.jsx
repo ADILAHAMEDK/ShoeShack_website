@@ -134,7 +134,7 @@ const SeeAll = () => {
                         <img src={item.imageUrl} alt="img" className='w-full h-72 transition duration-500 ease-in-out cursor-pointer' />
                         <h1 className='absolute bottom-12 group-hover:bottom-14  ml-1 px-2 bg-white'>${item.price}</h1>
                         <h2 className='mt-2 text-black text-base font-medium pl-2'>{item.name}</h2>
-                        <h2 className='mt-[1px] text-gray-600 pl-2'>Originals</h2>
+                        <h2 className='mt-[1px] text-gray-600 pl-2'>{item.category}</h2>
                         <FaHeart className='absolute top-3 right-2 text-lg' />
                     </div>
                 )) : "no data"}

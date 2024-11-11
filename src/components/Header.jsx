@@ -85,6 +85,7 @@ const Header = () => {
             }
             dispatch(searchFunction(search));
             navigate("/search")
+            setSearch("")
         }
     }
 
