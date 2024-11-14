@@ -71,9 +71,11 @@ const userSlice = createSlice({
         },
         addFavorite: (state, action) => {
             console.log(action.payload, "adil")
-            if(!state.favorite.some((item)=> item.id === action.payload.id)){
+            const exists = state.favorite.some((item)=> item.id === action.payload.id)
+            if(!exists){
                 state.favorite.push(action.payload)
             }
+          
             
         },
         removeFavorite: (state, action) => {

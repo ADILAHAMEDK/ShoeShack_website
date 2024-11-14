@@ -54,7 +54,7 @@ const FilterHomeProducts = () => {
         navigate("/seeAll")
     }
 
-    const handleFavorite = async(itemData) => {
+    const  handleFavorite = async(itemData) => {
         const user = auth.currentUser
         if(!user){
             toast.error("Please login in to add favorites.");
@@ -77,9 +77,9 @@ const FilterHomeProducts = () => {
     // Check if the item is already in favorites
     const favorites = userData.favorites || [];
 
-    if (favorites.some((itemId) => itemId === itemData.id)) {
+    if (favorites.some((itemId) => itemId.id === itemData.id)) {
         // Item is already a favorite; remove it
-        const updatedFavorites = favorites.filter((itemId) => itemId !== itemData.id);
+        const updatedFavorites = favorites.filter((itemId) => itemId.id !== itemData.id);
         await updateDoc(userDocRef, { favorites: updatedFavorites }); // Update the user document
         dispatch(removeFavorite(itemData));
         toast.info("Removed from Favorites");

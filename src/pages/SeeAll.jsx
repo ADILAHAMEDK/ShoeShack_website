@@ -5,6 +5,10 @@ import { FaXmark } from 'react-icons/fa6';
 import { MdDisabledByDefault } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts, priceFilterSeeAll, genderFilterSeeAll } from '../redux/ProductsSlice';
+import { auth, db } from '../firebase/Config';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { addFavorite, removeFavorite } from '../redux/UserSlice';
+import { toast } from 'react-toastify';
 
 const SeeAll = () => {
     const [dropDownPrice,setDropDownPrice] = useState(false);
@@ -15,6 +19,7 @@ const SeeAll = () => {
     const [GenderCheckBox3, setGenderCheckBox3] = useState(true);
     // const [checkBoxAll, setCheckBoxAll] = useState([]);
     const {priceFilterData} = useSelector((state)=> state.product);
+    const {favorite} = useSelector((state)=> state.user)
     const [seeAllData, setSeeAllData] = useState(priceFilterData)
     console.log(priceFilterData, "priceFilter........")
     const dispatch = useDispatch();
@@ -83,6 +88,49 @@ const SeeAll = () => {
         setRadioPrice(selectedPrice)
         dispatch(priceFilterSeeAll(selectedPrice));
     }
+
+
+    const  handleFavorite = async(itemData) => {
+        const user = auth.currentUser
+        if(!user){
+            toast.error("Please login in to add favorites.");
+            return;
+        }
+
+        const userId = user.uid
+
+        try {
+
+    // Refere nce to the user document
+    const userDocRef = doc(db, "users", userId);
+    console.log(userDocRef, "nnnoww")
+
+    // Fetch the current user's favorites
+    const userDocSnapshot = await getDoc(userDocRef);
+    console.log(userDocSnapshot,"nnnnnnn")
+    const userData = userDocSnapshot.exists() ? userDocSnapshot.data() : { favorites: [] };
+
+    // Check if the item is already in favorites
+    const favorites = userData.favorites || [];
+
+    if (favorites.some((itemId) => itemId.id === itemData.id)) {
+        // Item is already a favorite; remove it
+        const updatedFavorites = favorites.filter((itemId) => itemId.id !== itemData.id);
+        await updateDoc(userDocRef, { favorites: updatedFavorites }); // Update the user document
+        dispatch(removeFavorite(itemData));
+        toast.info("Removed from Favorites");
+    } else {
+        // Item is not a favorite; add it
+        const updatedFavorites = [ ...favorites, itemData];
+        await updateDoc(userDocRef, { favorites: updatedFavorites }); // Update the user document
+        dispatch(addFavorite(itemData));
+        toast.success("Added to Favorites");
+    }
+            
+        } catch (error) {
+            console.log(error)  
+        }
+    };
   return (
     <div className='px-3 mt-2'>
         <div className='max-w-[1490px] mx-auto'>
@@ -135,7 +183,7 @@ const SeeAll = () => {
                         <h1 className='absolute bottom-12 group-hover:bottom-14  ml-1 px-2 bg-white'>${item.price}</h1>
                         <h2 className='mt-2 text-black text-base font-medium pl-2'>{item.name}</h2>
                         <h2 className='mt-[1px] text-gray-600 pl-2'>{item.category}</h2>
-                        <FaHeart className='absolute top-3 right-2 text-lg' />
+                        <FaHeart onClick={()=>handleFavorite(item)} className={`absolute top-3 right-2 text-lg ${favorite.some((fav)=> fav.id === item.id) ? "text-red-700" : "text-black"}`} />
                     </div>
                 )) : "no data"}
             </div>
