@@ -75,8 +75,6 @@ const userSlice = createSlice({
             if(!exists){
                 state.favorite.push(action.payload)
             }
-          
-            
         },
         removeFavorite: (state, action) => {
             state.favorite = state.favorite.filter(item => item.id !== action.payload.id);

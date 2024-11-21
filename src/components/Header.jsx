@@ -59,7 +59,17 @@ const Header = () => {
     };
 
     const smallScreenNavigate = (links) => {
-        // Your navigation logic here...
+        if(links === "home"){
+            navigate("/");
+        }else if(links === "all categories"){
+            navigate("/allcategories")
+        }else if(links === "mens"){
+            navigate("/mens")
+        }else if(links === "womens"){
+            navigate("/womens")
+        }else if(links === "brands"){
+            navigate("/brands")  
+        }
     };
 
     const handleSearch = async()=>{
