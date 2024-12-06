@@ -11,6 +11,7 @@ import SeeAll from './pages/SeeAll'
 import AdminHomePage from './admin/AdminHomePage'
 import Search from './pages/Search'
 import Favorites from './pages/Favorites'
+import DetailsPage from './pages/DetailsPage'
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <Route path='/adminHomePage' element={<AdminHomePage />} />
       <Route path='/search' element={<Search />} />
       <Route path='/faverite' element={<Favorites />} />
+      <Route path='/details/:id' element={<DetailsPage/>}/>
     
       {/* 
       <Route path="/seeall" element={<SeeAll />} /> */}

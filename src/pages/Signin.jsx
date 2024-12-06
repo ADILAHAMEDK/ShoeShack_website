@@ -26,14 +26,16 @@ const Signin = () => {
            const user  = result.user
            console.log(user)
 
-           await setDoc(doc(db, "users", user.uid), {
+           const userLogin = {
             id:user.uid,
             displayName:name,
             createdAt: new Date(),
-           });
+           }
+           
+           await setDoc(doc(db, "users", user.uid),{userLogin});
            navigate("/login")
             
-        } catch (error) {
+        } catch (error){
             setError(error.message)
             
         }finally{

@@ -34,6 +34,7 @@ const productsSlice = createSlice({
     initialState: {
         search:[],
         searchedName:"",
+        products:[],
         filterProductsHome:[],
         loading: false,
         priceFilterData:[],
@@ -73,7 +74,8 @@ const productsSlice = createSlice({
             console.log("start");
             state.loading = true;
         }),
-        builders.addCase(fetchProducts.fulfilled, (state, action) => {            
+        builders.addCase(fetchProducts.fulfilled, (state, action) => {
+            state.products = action.payload            
             state.filterProductsHome = action.payload; 
             console.log(state.filterProductsHome, "jjjjjjjjj")  
             state.priceFilterData = action.payload;

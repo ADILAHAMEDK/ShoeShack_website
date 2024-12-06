@@ -103,7 +103,7 @@ const Header = () => {
         <div className='bg-black text-white'>
             <div className='py-3 px-3 max-w-[1490px] mx-auto flex items-center justify-between gap-1 lg:gap-3'>
                 <Link to="/"className='text-lg font-semibold'>ShoeShack</Link>
-                <div className='hidden sm:flex gap-9 text-base'>
+                <div className='hidden lg:flex md:gap-5 xl:gap-9 text-base'>
                     <Link to="/" className='hover:underline'>Home</Link>
                     <a>All Categories</a>
                     <a>Mens</a>
@@ -111,7 +111,7 @@ const Header = () => {
                     <a>Kids</a>
                     <a>Brands</a>
                 </div>
-                <div className='w-48 lg:w-80 rounded text-black relative'>
+                <div className='ml-1 md:ml-5 mr-5 w-48 md:w-full  lg:w-80 rounded text-black relative'>
                     <input type="text" value={search} onChange={(e)=>setSearch(e.target.value)}  placeholder='Search...' className='w-full px-2 py-[2px] rounded outline-none' />
                     <FaSearch onClick={handleSearch} className='absolute top-2 right-2' />
                 </div>
@@ -132,7 +132,7 @@ const Header = () => {
                         </div> : null}
                     </div>
                 </div>
-                <div onClick={() => setMenu(!menu)} className='sm:hidden text-lg'>
+                <div onClick={() => setMenu(!menu)} className='lg:hidden text-lg'>
                     <FaBars />
                 </div>
                 {menu && <div className='absolute top-0 bottom-0 left-0 z-10 w-64 h-screen bg-black'>

@@ -11,8 +11,11 @@ const AddProducts = () => {
         image:"",
         category:"",
         gender:"",
+        sizes:[],
         id:'',
     });
+
+    // const [sizeInput, setSizeInput] = useState("");
 
     const handleInputChange = (e)=>{
         const { name, value} = e.target
@@ -24,6 +27,24 @@ const AddProducts = () => {
         setAddProductsInput({...addProductsInput, image:file})
         console.log(addProductsInput.image, "iiiiimmmmg")
     }
+
+
+    const handleSizeChange = (e) => {
+        const { value, checked } = e.target;
+        if (checked) {
+            // Add the size to the sizes array
+            setAddProductsInput((prevState) => ({
+                ...prevState,
+                sizes: [...prevState.sizes, value],
+            }));
+        } else {
+            // Remove the size from the sizes array
+            setAddProductsInput((prevState) => ({
+                ...prevState,
+                sizes: prevState.sizes.filter((size) => size !== value),
+            }));
+        }
+    };
 
     const handleAddProducts = async()=>{
         try {
@@ -38,22 +59,22 @@ const AddProducts = () => {
     const productRef = doc(collection(db, 'products'));
     
     // Use setDoc to set the document with the custom ID field
-    await setDoc(productRef, {
+    await setDoc(productRef,{
         name: addProductsInput.name,
         price: addProductsInput.price,
         category: addProductsInput.category,
         gender: addProductsInput.gender,
         imageUrl: imageUrl,
+        sizes: addProductsInput.sizes,
         id: productRef.id  // Store the document ID in the 'id' field
     });
-                  toast.success("Product added successfully!")
-            }
-            
+    toast.success("Product added successfully!")
+            }   
         } catch (error) {
             console.log(error)   
         }
-
     }
+
   return (
     <div className='max-w-[600px] mx-auto mt-10 border'>
         <h1 className='text-center text-lg font-bold mb-1'>Add Products</h1>
@@ -76,6 +97,22 @@ const AddProducts = () => {
         <div className='px-2 flex mb-3'>
             <label className='text-lg mr-1'>Image:</label>
             <input type="file" onChange={handleImageUpload} className='w-full px-2 border border-black focus:outline-none rounded' />
+        </div>
+        <div className='px-2 flex mb-3'>
+            <label className='text-lg mr-1'>Sizes:</label>
+            <div className='flex items-center gap-3 '>
+                {['XS','S','M','L','XL'].map((item)=>(
+                    <label key={item} className=''>
+                    <input type="checkbox"
+                     value={item}
+                     onChange={handleSizeChange}
+                     placeholder="Enter size (e.g., S, M, L)"
+                     className='w-5 h-5 px-2 border border-black focus:outline-none rounded' />
+                {item}
+                     </label>
+                ))}
+            </div>
+            
         </div>
         <button onClick={handleAddProducts} className='bg-black text-white px-2 py-1 rounded w-full'>Add</button>
     </div>

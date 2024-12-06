@@ -6,6 +6,8 @@ import { auth } from '../firebase/Config'
 import { useDispatch } from 'react-redux'
 import { clearUserName, getUserName } from '../redux/UserSlice'
 import { toast } from 'react-toastify'
+import { collection, setDoc } from 'firebase/firestore'
+import { BsLayoutSplit } from 'react-icons/bs'
 
 const Login = () => {
     const navigate = useNavigate();
@@ -23,8 +25,9 @@ const Login = () => {
              const result = await signInWithEmailAndPassword(auth, email, password)
              const getUser = result.user
              const displayName = getUser.displayName
-             dispatch(getUserName(displayName))
-             toast.success("Login Sucessfull"); 
+             dispatch(getUserName(displayName));
+            
+             toast.success("Login Sucessfull");
             navigate("/") 
         } catch (error){
             // alert(error.message) 
