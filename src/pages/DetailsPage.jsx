@@ -47,8 +47,8 @@ const DetailsPage = () => {
             </div>
             </div>
         </div>
-        <h1 className='text-2xl sm:text-3xl font-medium sm:font-bold mt-6 mb-3'>SEE SIMILAR</h1>
-        <FilterHomeProducts/>
+        <h1 className='text-2xl sm:text-3xl font-medium sm:font-bold mt-6 mb-3 border'>SEE SIMILAR</h1>
+        <FilterHomeProducts DetailsPagePx={"px"}/>
     </div>
   )
 }

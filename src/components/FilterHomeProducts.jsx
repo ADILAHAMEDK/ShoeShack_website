@@ -8,7 +8,7 @@ import { auth, db } from '../firebase/Config';
 import { addFavorite, fetchFavorites, removeFavorite } from '../redux/UserSlice';
 import { handleFavorite } from '../functions/AddToFavoriteFunction';
 
-const FilterHomeProducts = () => {
+const FilterHomeProducts = ({DetailsPagePx}) => {
     const [homeFilter, setHomeFilter] = useState([]);
     const [homeFilterBg, setHomeFilterBg] = useState("all");
     const {filterProductsHome,loading} = useSelector((state)=> state.product)
@@ -98,7 +98,7 @@ const FilterHomeProducts = () => {
     // };
 
   return (
-    <div className='px-3 mt-3'>
+    <div className={`${DetailsPagePx ? "px-0" : "px-3"} mt-3`}>
         <div className='max-w-[1490px] mx-auto'>
             <div className='sm:flex justify-center items-center sm:justify-between'>
                 <div className='flex gap-3 sm:gap-5'>
