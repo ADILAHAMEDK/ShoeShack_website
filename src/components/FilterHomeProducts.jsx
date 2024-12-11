@@ -98,7 +98,7 @@ const FilterHomeProducts = ({DetailsPagePx}) => {
     // };
 
   return (
-    <div className={`${DetailsPagePx ? "px-0" : "px-3"} mt-3`}>
+    <div className={`${DetailsPagePx === "px" ? "px-0" : "px-3"} mt-3`}>
         <div className='max-w-[1490px] mx-auto'>
             <div className='sm:flex justify-center items-center sm:justify-between'>
                 <div className='flex gap-3 sm:gap-5'>
